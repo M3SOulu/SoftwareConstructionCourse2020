@@ -9,6 +9,7 @@ import fi.oulu.softwareconstruction.covid19.nordicservice.models.NordicCovid19Ac
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -20,6 +21,9 @@ public class NordicCovid19Resource {
     
     @RequestMapping("/{date}")
     public NordicCovid19ActiveItem getNordicCovid19Active(@PathVariable("date") String date) {
+        RestTemplate restTemplate = new RestTemplate();
+        
+        Countries countries = restTemplate.getForObject("http://localhost:8080/countries/nordics", Countries.class);
         return new NordicCovid19ActiveItem(date, 0);
     }
 }
