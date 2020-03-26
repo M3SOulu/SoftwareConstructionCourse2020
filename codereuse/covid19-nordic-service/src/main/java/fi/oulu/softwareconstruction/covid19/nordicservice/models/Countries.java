@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.oulu.softwareconstruction.covid19.nordicservice.resources;
+package fi.oulu.softwareconstruction.covid19.nordicservice.models;
 
 import java.util.Set;
 
@@ -14,6 +14,10 @@ import java.util.Set;
 public class Countries {
     private String name;
     private Set<String> codes;
+    
+    public Countries() {
+        
+    }
     
     public Countries(String name, Set<String> codes) {
         this.name = name;
@@ -34,5 +38,9 @@ public class Countries {
 
     public void setCodes(Set<String> codes) {
         this.codes = codes;
+    }
+    
+    public String toString() {
+        return name + ": " + codes.toString();
     }
 }

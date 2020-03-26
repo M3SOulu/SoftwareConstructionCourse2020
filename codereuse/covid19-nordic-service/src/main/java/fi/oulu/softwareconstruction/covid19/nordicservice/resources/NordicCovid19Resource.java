@@ -5,6 +5,8 @@
  */
 package fi.oulu.softwareconstruction.covid19.nordicservice.resources;
 
+import fi.oulu.softwareconstruction.covid19.nordicservice.models.Countries;
+import fi.oulu.softwareconstruction.covid19.nordicservice.models.Country;
 import fi.oulu.softwareconstruction.covid19.nordicservice.models.NordicCovid19ActiveItem;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,12 @@ public class NordicCovid19Resource {
         RestTemplate restTemplate = new RestTemplate();
         
         Countries countries = restTemplate.getForObject("http://localhost:8080/countries/nordics", Countries.class);
+        System.out.println("Got countries: " + countries);
+        for (String countryCode: countries.getCodes()) {
+            System.out.println("Get country name for " + countryCode);
+            Country country = restTemplate.getForObject("http://localhost:8080/country/" + countryCode, Country.class);
+            System.out.println("Get data for " + country.getName() + " (" + date + ")");
+        }
         return new NordicCovid19ActiveItem(date, 0);
     }
 }
