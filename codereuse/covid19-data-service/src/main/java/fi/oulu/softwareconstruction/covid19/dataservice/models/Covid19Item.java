@@ -5,6 +5,8 @@
  */
 package fi.oulu.softwareconstruction.covid19.dataservice.models;
 
+import java.util.Map;
+
 /**
  *
  * @author Maëlick Claes <himself@maelick.net>
@@ -12,9 +14,9 @@ package fi.oulu.softwareconstruction.covid19.dataservice.models;
 public class Covid19Item {
     private String country;
     private String date;
-    private int confirmed = 0;
-    private int deaths = 0;
-    private int recovered = 0;
+    private Integer confirmed = 0;
+    private Integer deaths = 0;
+    private Integer recovered = 0;
 
     public Covid19Item(String country) {
         this.country = country;
@@ -25,6 +27,22 @@ public class Covid19Item {
         this.date = date;
     }
 
+    public Covid19Item(String country, Map<String, Object> item) {
+        this.country = country;
+        if (item.containsKey("date")) {
+            this.date = (String) item.get("date");
+        }
+        if (item.containsKey("confirmed")) {
+            this.confirmed = (Integer) item.get("confirmed");
+        }
+        if (item.containsKey("deaths")) {
+            this.deaths = (Integer) item.get("deaths");
+        }
+        if (item.containsKey("recovered")) {
+            this.recovered = (Integer) item.get("recovered");
+        }
+    }
+
     public String getCountry() {
         return country;
     }
@@ -33,7 +51,7 @@ public class Covid19Item {
         this.country = country;
     }
 
-    public int getConfirmed() {
+    public Integer getConfirmed() {
         return confirmed;
     }
 
@@ -41,7 +59,7 @@ public class Covid19Item {
         this.confirmed = confirmed;
     }
 
-    public int getDeaths() {
+    public Integer getDeaths() {
         return deaths;
     }
 
@@ -49,7 +67,7 @@ public class Covid19Item {
         this.deaths = deaths;
     }
 
-    public int getRecovered() {
+    public Integer getRecovered() {
         return recovered;
     }
 
@@ -57,7 +75,7 @@ public class Covid19Item {
         this.recovered = recovered;
     }
     
-    public int getActive() {
+    public Integer getActive() {
         return this.confirmed - (this.deaths + this.recovered);
     }
 
