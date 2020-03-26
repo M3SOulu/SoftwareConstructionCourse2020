@@ -21,44 +21,24 @@ class Runner implements Runnable {
                 e.printStackTrace();
             }
             
-            doSomeComputation();
-        }
-    }
-
-    private void doSomeComputation() throws RuntimeException {
-        // Other
-        if (this.rng.nextDouble() < 0.1) {
-            throw new RuntimeException("Error in Runner " + this.id);
+            if (this.rng.nextDouble() < 0.01) {
+                throw new RuntimeException("Error in Runner " + this.id);
+            }
         }
     }
 }
 
 public class App {
     public static void main(String[] args) {
-        Thread threads[] = initThreads(10);
-
-        startThreads(threads);
-
-        joinThreads(threads);
-
-        System.out.println("Threads Finished");
-    }
-
-    private static Thread[] initThreads(int numberOfThreads) {
-        Thread threads[] = new Thread[numberOfThreads];
+        Thread threads[] = new Thread[10];
         for (int i = 0; i < threads.length; i++) {
             threads[i] = new Thread(new Runner(i));
         }
-        return threads;
-    }
 
-    private static void startThreads(Thread[] threads) {
         for (int i = 0; i < threads.length; i++) {
             threads[i].start();
         }
-    }
 
-    private static void joinThreads(Thread[] threads) {
         for (int i = 0; i < threads.length; i++) {
             try {
                 threads[i].join();
@@ -66,5 +46,7 @@ public class App {
                 e.printStackTrace();
             }
         }
+
+        System.out.println("Threads Finished");
     }
 }

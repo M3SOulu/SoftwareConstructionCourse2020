@@ -1,4 +1,4 @@
-package fi.oulu.oftwareconstruction.defensiveprogramming.Demo1Enum;
+package fi.oulu.softwareconstruction.defensiveprogramming.Demo1Enum;
 
 public class App {
     enum Level {

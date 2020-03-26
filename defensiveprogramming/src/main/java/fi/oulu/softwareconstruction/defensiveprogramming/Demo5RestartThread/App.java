@@ -66,11 +66,11 @@ class ThreadPool {
         for (int i = 0; i < threads.length; i++) {
             Thread.State s = threads[i].getState();
             System.out.println("Thread " + i + ": " + s);
-            if (s == Thread.State.TERMINATED) {
-                System.out.println("Restart Thread " + i);
-                threads[i] = new Thread(new Runner(i));
-                threads[i].start();
-            }
+//            if (s == Thread.State.TERMINATED) {
+//                System.out.println("Restart Thread " + i);
+//                //threads[i] = new Thread(new Runner(i));
+//                threads[i].start();
+//            }
         }
     }
 }
