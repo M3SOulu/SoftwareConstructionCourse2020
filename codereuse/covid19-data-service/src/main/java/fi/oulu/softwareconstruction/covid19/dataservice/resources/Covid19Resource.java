@@ -5,15 +5,14 @@
  */
 package fi.oulu.softwareconstruction.covid19.dataservice.resources;
 
-import fi.oulu.softwareconstruction.covid19.dataservice.models.Covid19Dataset;
 import fi.oulu.softwareconstruction.covid19.dataservice.models.Covid19Item;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,14 +29,13 @@ public class Covid19Resource {
     private RestTemplate restTemplate;
     
     private Map<String, List<Covid19Item>> dataset;
-    private LocalDateTime lastDatasetUpdate = LocalDateTime.MIN;
     
     @Bean
     RestTemplate restTemplate() {
         return new RestTemplate();
     }
     
-    public Map<String, List<Covid19Item>> fetchDataset() {
+    private Map<String, List<Covid19Item>> fetchDataset() {
         final String url = "https://pomber.github.io/covid19/timeseries.json";
         System.out.println("Fetch dataset from " + url);
         Map<String, List<Covid19Item>> result = parseDataset(restTemplate.getForObject(url, Map.class));
@@ -61,27 +59,21 @@ public class Covid19Resource {
         return result;
     }
     
+    @Scheduled(fixedRate = 3600 * 1000)
     public void updateDataset() {
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println("Last updated: " + this.lastDatasetUpdate);
-        if (this.lastDatasetUpdate.plusHours(1).isBefore(LocalDateTime.now())) {
-            this.dataset = this.fetchDataset();
-            this.lastDatasetUpdate = LocalDateTime.now();
-        } else {
-            System.out.println("No need to update dataset");
-        }
+        this.dataset = this.fetchDataset();
     }
     
     @RequestMapping("/{country}")
     public Covid19Item getCovid19Data(@PathVariable("country") String country) {
-        this.updateDataset();
+        //this.updateDataset();
         List<Covid19Item> countryItems = this.dataset.get(country);
         return countryItems.get(countryItems.size() - 1);
     }
     
     @RequestMapping("/{country}/{date}")
     public Covid19Item getCovid19Data(@PathVariable("country") String country, @PathVariable("date") String date) {
-        this.updateDataset();
+        //this.updateDataset();
         for (Covid19Item item: this.dataset.get(country)) {
             if (item.getDate().equals(date)) {
                 return item;
