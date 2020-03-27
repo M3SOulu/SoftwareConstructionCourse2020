@@ -6,17 +6,27 @@
 package fi.oulu.softwareconstruction.covid19.dataservice.models;
 
 import java.util.Map;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author Maëlick Claes <himself@maelick.net>
  */
+@Document(collection = "data")
 public class Covid19Item {
+    @Id
+    private String id;
+
     private String country;
     private String date;
     private Integer confirmed = 0;
     private Integer deaths = 0;
     private Integer recovered = 0;
+    
+    public Covid19Item() {
+        
+    }
 
     public Covid19Item(String country) {
         this.country = country;
@@ -41,6 +51,14 @@ public class Covid19Item {
         if (item.containsKey("recovered")) {
             this.recovered = (Integer) item.get("recovered");
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCountry() {
