@@ -6,9 +6,11 @@
 package fi.oulu.softwareconstruction.covid19.countryservice.resources;
 
 import fi.oulu.softwareconstruction.covid19.countryservice.models.Country;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -32,9 +34,11 @@ public class CountryResource {
                 country.setName("Norway");
                 break;
             default:
-                throw new IllegalArgumentException(
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
                         "Country code '" + code +
-                        "' unkown or not handled");
+                        "' unkown or not handled"
+                );
         }
         return country;
     }

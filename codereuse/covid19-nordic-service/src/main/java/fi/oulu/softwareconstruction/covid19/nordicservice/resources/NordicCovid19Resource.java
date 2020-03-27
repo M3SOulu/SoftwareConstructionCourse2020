@@ -12,11 +12,14 @@ import fi.oulu.softwareconstruction.covid19.nordicservice.models.NordicCovid19Ac
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -40,7 +43,15 @@ public class NordicCovid19Resource {
         int active = 0;
         for (String countryCode: countries.getCodes()) {
             Country country = fetchCountryCode(countryCode);
-            active += fetchData(country, date).getActive();
+            try {
+                active += fetchData(country, date).getActive();
+            } catch (HttpClientErrorException exc) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Cannot get active cases for " + country.getName() + " " + date,
+                        exc
+                );
+            }
         }
         return new NordicCovid19ActiveItem(date, active);
     }
